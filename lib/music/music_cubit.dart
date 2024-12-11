@@ -349,7 +349,7 @@ class MusicSessionCubit extends Cubit<MusicSessionState> {
               if (response.statusCode == 200) {
                 Lrc? lrc;
                 String utf8Body = utf8.decode(response.bodyBytes);
-                print(utf8Body);
+                //print(utf8Body);
                 if (Lrc.isValid(utf8Body)) {
                   lrc = Lrc.parse(utf8Body);
                   //filter out empty lines

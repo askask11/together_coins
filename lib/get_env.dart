@@ -69,12 +69,14 @@ class GetEnv {
     return User.fromJson(jsonDecode(userJson));
   }
 
-  static Future<http.StreamedResponse> uploadFile(List<File> files) async {
+  static Future<http.StreamedResponse> uploadFile(List<File> files, String jwtToken) async {
     //upload file to server
     //get the file path and add to the selected list
     //upload to base+/upload
     var request = http.MultipartRequest(
-        'POST', Uri.parse('${GetEnv.getApiBaseUrl()}/upload'));
+        'POST', Uri.parse('${GetEnv.getApiBaseUrl()}/files/upload'),
+    );
+    request.headers['Authorization']="Bearer $jwtToken";
     for (var file in files) {
       request.files.add(await http.MultipartFile.fromPath('files', file.path));
     }

@@ -119,6 +119,18 @@ class AddImagePage extends StatelessWidget {
                         if (result == null) {
                           return;
                         }
+                        //Show loading alert
+                        Alert(
+                          context: context,
+                          title: "Uploading",
+                          content: SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        ).show();
                         List<String> paths = [];
                         for (var file in result.files) {
                           /*print(file.name);
@@ -136,13 +148,15 @@ class AddImagePage extends StatelessWidget {
                         //get the file path and add to the selected list
                         //upload to base+/upload
                         var response = await GetEnv.uploadFile(
-                            paths.map((e) => File(e)).toList());
+                            paths.map((e) => File(e)).toList(),musicSessionCubit.state.user.jwtToken);
                         if (response.statusCode != 200) {
                           //show error message
                           if (!context.mounted) {
                             return;
                           }
-                          GetEnv.alert(context, "File upload failed");
+                          print(response.statusCode);
+                          Map<String, dynamic> jsonr = jsonDecode(await response.stream.bytesToString());
+                          GetEnv.alert(context, "File upload failed due to ${jsonr["data"]}");
                           return;
                         }
 
@@ -163,19 +177,26 @@ class AddImagePage extends StatelessWidget {
                           "external": 1,
                           "paths": pathsUploaded,
                         });
+                        //print("selected list is ${state.selectedList}");
+
                         final response2 = await http.post(
                           Uri.parse(
-                              '${GetEnv.getApiBaseUrl()}/playback/image/lists/${state.selectedList}/add_images'),
+                              '${GetEnv.getApiBaseUrl()}/playback/image/lists/${musicSessionCubit.state.currentImageListId.toString()}/add_images'),
                           headers: <String, String>{
                             'Content-Type': 'application/json; charset=UTF-8',
+                            'Authorization':
+                                "Bearer ${musicSessionCubit.state.user.jwtToken}",
                           },
                           body: body,
                         );
+                        print("response2 is ${response2.statusCode}");
                         if (!context.mounted) {
+                          //print("context is not mounted");
                           return;
                         }
                         if (response2.statusCode != 200) {
                           //show error message
+                          print(response2.body);
                           GetEnv.alert(context, "Image submission failed");
                           return;
                         }
@@ -184,10 +205,13 @@ class AddImagePage extends StatelessWidget {
                           context: context,
                           title: "Success",
                           desc: "Image uploaded successfully",
-                        ).show();
+                        ).show().then((b){
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        });
                         //
 
-                        Navigator.of(context).pop();
+                        //Navigator.of(context).pop();
                       },
                       icon: Icon(Icons.upload_file, color: Colors.white),
                       label: Text('Upload Image',
