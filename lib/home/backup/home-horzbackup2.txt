@@ -1,0 +1,205 @@
+import 'package:flutter/material.dart';
+import 'dart:math';
+
+void main()
+{
+runApp(HomeApp());
+}
+
+class HomeApp extends StatelessWidget
+{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      title: 'TogetherCoins',
+      theme: customTheme3,
+      home: HomePage(),
+    );
+  }
+
+}
+
+
+final ThemeData customTheme3 = ThemeData(
+  colorScheme: ColorScheme.fromSeed(seedColor:Colors.pink),
+  useMaterial3: true, // Enables Material Design 3 styles
+);
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 260,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundImage: AssetImage('assets/images/avatar1.png'),
+              ),
+              SizedBox(width: 5),
+              Icon(Icons.favorite, color: Colors.pink),
+              SizedBox(width: 5),
+              CircleAvatar(
+                radius: 15,
+                backgroundImage: AssetImage('assets/images/avatar2.png'),
+              ),
+            ],
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Center(
+              child: Text(
+                "💰 Coins: 120",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Top Section
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/images/avatar1.png'),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    "Welcome back, Alex! 💕",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Let's make today amazing together! 🌟",
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+
+            // My Tasks Board
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ReusableCard(
+                icon: Icons.checklist,
+                title: "My Tasks Board 📝",
+                subtitle: "⏳ Pending: 3  |  🚀 In Progress: 2",
+                onTap: () {
+                  // Navigate to My Tasks Board
+                },
+              ),
+            ),
+
+            // Mini-Store Highlight
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+              child: ReusableCard(
+                icon: Icons.shopping_bag,
+                title: "Mini-Store 🛍️",
+                subtitle: "✨ Top Reward: Free Ice Cream 🍦",
+                onTap: () {
+                  // Navigate to Mini-Store
+                },
+              ),
+            ),
+
+            // Shared Experiences - Music Session
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ReusableCard(
+                icon: Icons.music_note,
+                title: "Music Session 🎵",
+                subtitle: "Enjoy music together in real-time!",
+                onTap: () {
+                  // Navigate to Music Session
+                },
+              ),
+            ),
+
+            // Memory Board
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+              child: ReusableCard(
+                icon: Icons.photo_album,
+                title: "Memory Board 📚",
+                subtitle: "Scroll through your shared moments!",
+                onTap: () {
+                  // Navigate to Memory Board
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReusableCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  ReusableCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        elevation: 4,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16.0),
+          splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, color: Theme.of(context).colorScheme.primary),
+                    SizedBox(width: 10),
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
